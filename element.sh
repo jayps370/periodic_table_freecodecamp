@@ -2,11 +2,6 @@
 
 PSQL="psql -X --username=freecodecamp --dbname=periodic_table -t -c"
 
-# get elements and properties
-ELEMENTS=$($PSQL "select * from elements right join properties using(atomic_number);")
-
-#ELEMENTS=$($PSQL "select * from elements;")
-
 
 DISPLAY_PROPERTIES(){
 
@@ -22,6 +17,7 @@ DISPLAY_PROPERTIES(){
 }
 
 ELEMENT_CHECKER(){
+  # check if argument is a number
   if [[ $USER_INPUT =~ ^[0-9]+$ ]]
     then
     ELEMENT_CHECK=$($PSQL "select * from elements right join properties using(atomic_number) full join types using(type_id) where atomic_number=$USER_INPUT;")
@@ -29,6 +25,7 @@ ELEMENT_CHECKER(){
       then
       echo "I could not find that element in the database."
     fi
+  #if argument is not a number
     else
     ELEMENT_CHECK=$($PSQL "select * from elements right join properties using(atomic_number) full join types using(type_id) where symbol = '$USER_INPUT' or name = '$USER_INPUT';")
     if [[ -z $ELEMENT_CHECK ]]
